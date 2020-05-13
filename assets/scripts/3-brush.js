@@ -23,9 +23,9 @@
 function brushUpdate(brush, g, line, xFocus, xContext, xAxis, yAxis) {
   // TODO: Redraw the focus line chart as a function of the selected zone in the context line chart
     // TODO: Redraw the focus line chart as a function of the selected zone in the context line chart
-  var zoom = d3.event.selection || xContext.range()
+  var focs = d3.event.selection || xContext.range()
   var invt = xContext.invert
-  xFocus.domain(zoom.map(invt, xContext))
+  xFocus.domain(focs.map(invt, xContext))
   var streets = g.selectAll(".line")
   streets.attr("d", line)
   var axis = d3.select(".x.axis")
