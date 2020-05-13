@@ -15,7 +15,7 @@ function domainColor(color, data) {
   // TODO: Define the domain of variable "color" by associating a street name to a specific color
   color = d3.scaleOrdinal()
         .domain([data.columns.slice(1)])
-        .range(d3.schemeSet2);
+        .range(d3.schemeCategory10);
 }
 
 /**
@@ -30,10 +30,10 @@ function parseDate(data) {
    data_slices = data.columns.slice(1).map(function(id) {
         return {
             index: id,
-            row: data.map(function(d){
+            rows: data.map(function(d){
                 return {
                     date: parser(d.date),
-                    streets: +d[id]
+                    streats: +d[id]
                 };
             })
         };
@@ -106,8 +106,8 @@ function domainX(xFocus, xContext, data) {
 function domainY(yFocus, yContext, sources) {
   // TODO: specify the domains for the "xFocus" and "xContext" variables for the Y axis
   yFocus.domain([(0), d3.max(data_slices, function(c) {
-      return d3.max(c.values, function(d) {
-          return d.measurement + 4; });
+      return d3.max(c.rows, function(d) {
+          return d.streats + 4; });
           })
       ]);
 }
