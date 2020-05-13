@@ -13,7 +13,9 @@
  */
 function domainColor(color, data) {
   // TODO: Define the domain of variable "color" by associating a street name to a specific color
-  console.log("Yes I am inside");
+  color = d3.scaleOrdinal()
+        .domain([data.columns.slice(1)])
+        .range(d3.schemeSet2);
 }
 
 /**
@@ -24,6 +26,23 @@ function domainColor(color, data) {
  */
 function parseDate(data) {
   // TODO: Convert the dates from the CSV file to date objects
+  var parseDate = d3.timeParse("%Y-%m-%d");
+  data = data.map(function(d){
+    return {
+        date: parseTime(d.date),
+         Berri: parseInt(d.Berri),
+         Maisonneuve: parseInt(d.Maisonneuve),
+         NotreDame: parseInt(d.NotreDame),
+         Parc: parseInt(d.Parc),
+         PontJacquesCartier: parseInt(d.PontJacquesCartier),
+         RenéLévesque: parseInt(d.RenéLévesque),
+         SaintAntoine: parseInt(d.SaintAntoine),
+         SaintUrbain: parseInt(d.SaintUrbain),
+         TotemLaurier: parseInt(d.TotemLaurier),
+         Moyenne: parseInt(d.Moyenne)
+    };
+  })
+  console.log(data);
 }
 
 /**
