@@ -29,7 +29,7 @@ function parseDate(data) {
   var parseDate = d3.timeParse("%Y-%m-%d");
   data = data.map(function(d){
     return {
-        date: parseTime(d.date),
+         date: parseDate(d.date),
          Berri: parseInt(d.Berri),
          Maisonneuve: parseInt(d.Maisonneuve),
          NotreDame: parseInt(d.NotreDame),
