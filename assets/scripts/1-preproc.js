@@ -4,7 +4,7 @@
  * File to process CSV data.
  */
 
-
+ var data_slices = null;
 /**
  * Specifies the domain  by associating a street name to a specific color.
  *
@@ -26,10 +26,22 @@ function domainColor(color, data) {
  */
 function parseDate(data) {
   // TODO: Convert the dates from the CSV file to date objects
-  var parseDate = d3.timeParse("%Y-%m-%d");
+  var parser = d3.timeParse("%Y-%m-%d");
+   data_slices = data.columns.slice(1).map(function(id) {
+        return {
+            index: id,
+            row: data.map(function(d){
+                return {
+                    date: parser(d.date),
+                    streets: +d[id]
+                };
+            })
+        };
+      });
+  var parser = d3.timeParse("%Y-%m-%d");
   data = data.map(function(d){
     return {
-         date: parseDate(d.date),
+         date: parser(d.date),
          Berri: parseInt(d.Berri),
          Maisonneuve: parseInt(d.Maisonneuve),
          NotreDame: parseInt(d.NotreDame),
@@ -80,7 +92,8 @@ function createSources(color, data) {
  */
 function domainX(xFocus, xContext, data) {
   // TODO: specify the domains for the "xFocus" and "xContext" variables for the X axis
-
+  data = parseDate(data)
+  xFocus.domain(d3.extent(data, function(d){ return d.date}));
 }
 
 /**
@@ -92,5 +105,9 @@ function domainX(xFocus, xContext, data) {
  */
 function domainY(yFocus, yContext, sources) {
   // TODO: specify the domains for the "xFocus" and "xContext" variables for the Y axis
-
+  yFocus.domain([(0), d3.max(data_slices, function(c) {
+      return d3.max(c.values, function(d) {
+          return d.measurement + 4; });
+          })
+      ]);
 }
