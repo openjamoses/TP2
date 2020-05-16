@@ -1,113 +1,106 @@
 "use strict";
 
 /**
- * File to process CSV data.
+ * Fichier permettant de traiter les données provenant du fichier CSV.
  */
 
- var data_slices = null;
+
 /**
- * Specifies the domain  by associating a street name to a specific color.
+ * Précise le domaine en associant un nom de rue à une couleur précise.
  *
- * @param color   10 color scale
- * @param data    CSV data
+ * @param color   Échelle de 10 couleurs.
+ * @param data    Données provenant du fichier CSV.
  */
 function domainColor(color, data) {
-  // TODO: Define the domain of variable "color" by associating a street name to a specific color
-  color = d3.scaleOrdinal()
-        .domain([data.columns.slice(1)])
-        .range(d3.schemeCategory10);
+  // TODO: Définir le domaine de la variable "color" en associant un nom de rue à une couleur.
+  // reader the header and exclude the date column..
+  var header = Object.keys(data[0]).filter(header => header != "Date"); // On prend comme noms de lieux toutes les colonnes sauf "Date"
+  color.domain(header);
 }
 
 /**
- * Converts dates in the CSV file to Date objects.
+ * Convertit les dates se trouvant dans le fichier CSV en objet de type Date.
  *
- * @param data    CSV data
+ * @param data    Données provenant du fichier CSV.
  * @see https://www.w3schools.com/jsref/jsref_obj_date.asp
  */
 function parseDate(data) {
-  // TODO: Convert the dates from the CSV file to date objects
-  var parser = d3.timeParse("%Y-%m-%d");
-   data_slices = data.columns.slice(1).map(function(id) {
-        return {
-            index: id,
-            rows: data.map(function(d){
-                return {
-                    date: parser(d.date),
-                    streats: +d[id]
-                };
-            })
-        };
-      });
-  var parser = d3.timeParse("%Y-%m-%d");
-  data = data.map(function(d){
-    return {
-         date: parser(d.date),
-         Berri: parseInt(d.Berri),
-         Maisonneuve: parseInt(d.Maisonneuve),
-         NotreDame: parseInt(d.NotreDame),
-         Parc: parseInt(d.Parc),
-         PontJacquesCartier: parseInt(d.PontJacquesCartier),
-         RenéLévesque: parseInt(d.RenéLévesque),
-         SaintAntoine: parseInt(d.SaintAntoine),
-         SaintUrbain: parseInt(d.SaintUrbain),
-         TotemLaurier: parseInt(d.TotemLaurier),
-         Moyenne: parseInt(d.Moyenne)
-    };
-  })
-  console.log(data);
+  // TODO: Convertir les dates du fichier CSV en objet de type Date.
+  var parser = d3.timeParse("%d/%m/%y")
+  // simply loop through every Date row and parse the data
+  data.forEach(row => {
+    row.Date = parser(row.Date)
+  });
 }
 
 /**
- * Sorts data by street name and then by date
+ * Trie les données par nom de rue puis par date.
  *
- * @param color     10 color scale (its domain contains the street names)
- * @param data      Data from CSV file
+ * @param color     Échelle de 10 couleurs (son domaine contient les noms de rues).
+ * @param data      Données provenant du fichier CSV.
  *
- * @return Array    The sorted data which will be used to generate the graphic.
- *                  The returned element should be a table with 10 entries, one of each street and one for the average.
-  *                 It should be of the following form:
+ * @return Array    Les données triées qui seront utilisées pour générer les graphiques.
+ *                  L'élément retourné doit être un tableau d'objets comptant 10 entrées, une pour chaque rue
+ *                  et une pour la moyenne. L'objet retourné doit être de la forme suivante:
  *
  *                  [
  *                    {
- *                      name: string      // Street name
- *                      values: [         // A table with 365 entries, one for each day
- *                        date: Date,     // The date
- *                        count: number   // The quantity of bikes on that day (convert it with parseInt)
+ *                      name: string      // Le nom de la rue,
+ *                      values: [         // Le tableau compte 365 entrées, pour les 365 jours de l'année.
+ *                        date: Date,     // La date du jour.
+ *                        count: number   // Le nombre de vélos compté ce jour là (effectuer une conversion avec parseInt)
  *                      ]
  *                    },
  *                     ...
  *                  ]
  */
 function createSources(color, data) {
-  // TODO: Return the object with the given format
-
+  //We will sort the data and return the results to the caller
+  var sortResults = [];
+  var domain = color.domain();
+  domain.forEach(name => {
+    sortResults.push({name:name, values:[]});
+  })
+  // sort by date then by street name..
+  // parse the street values to the integer..
+  data.forEach(rows => {
+    for(var name in rows) {
+      if(name !== "Date") {
+        var rowValues = sortResults.find(obj => obj.name == name);
+        rowValues.values.push({date:rows["Date"], count:parseInt(rows[name], 10)});
+      }
+    }
+  })
+  return sortResults
 }
 
 /**
- * Specifies the domain of the scales used for the "focus" and "context" line charts for the X axis
+ * Précise le domaine des échelles utilisées par les graphiques "focus" et "contexte" pour l'axe X.
  *
- * @param xFocus      X scale used for the "focus" line chart
- * @param xContext    X scale used for the "context" line chart
- * @param data        Data from the CSV file
+ * @param xFocus      Échelle en X utilisée avec le graphique "focus".
+ * @param xContext    Échelle en X utilisée avec le graphique "contexte".
+ * @param data        Données provenant du fichier CSV.
  */
 function domainX(xFocus, xContext, data) {
-  // TODO: specify the domains for the "xFocus" and "xContext" variables for the X axis
-  data = parseDate(data)
-  xFocus.domain(d3.extent(data, function(d){ return d.date}));
+  // TODO: Préciser les domaines pour les variables "xFocus" et "xContext" pour l'axe X.
+  var dateSize = data.length;
+  var range = [data[0].Date, data[dateSize-1].Date];
+  xFocus.domain(range);
+  xContext.domain(range);
 }
 
 /**
- * Specifies the domain of the scales used for the "focus" and "context" line charts for the X axis
+ * Précise le domaine des échelles utilisées par les graphiques "focus" et "contexte" pour l'axe Y.
  *
- * @param yFocus      Y scale used for the "focus" line chart
- * @param yContext    Y scale used for the "context" line chart
- * @param sources     Data sorted by street and date (see function "createSources").
+ * @param yFocus      Échelle en Y utilisée avec le graphique "focus".
+ * @param yContext    Échelle en Y utilisée avec le graphique "contexte".
+ * @param sources     Données triées par nom de rue et par date (voir fonction "createSources").
  */
 function domainY(yFocus, yContext, sources) {
-  // TODO: specify the domains for the "xFocus" and "xContext" variables for the Y axis
-  yFocus.domain([(0), d3.max(data_slices, function(c) {
-      return d3.max(c.rows, function(d) {
-          return d.streats + 4; });
-          })
-      ]);
+  // TODO: Préciser les domaines pour les variables "yFocus" et "yContext" pour l'axe Y.
+
+  var maxVal = d3.max(sources.map(source => d3.max(source.values.map(value => value.count))))
+
+  yFocus.domain([0, maxVal])
+  yContext.domain([0, maxVal])
 }
