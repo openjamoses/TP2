@@ -1,17 +1,16 @@
 # TP2
-
 This is a simple d3 project,
-please don't take it serous, it was just for fun,
-but of course may give u the basic idea if u are also a beginner in d3 like me,
+please don't take it seriously, it was just for fun,
+but of course, may give you the basic idea if you are also a beginner in d3 like me,
 
-Lets have fun!!!!!!
-1) - Clone the project using normal git command
+Let's have fun!!!!!!
+ - Clone the project using standard git command:
   git clone https://github.com/openjamoses/TP2.git
-2) - Although this is just a bunch of html and javascript, I suggest running the code by configuring ur local server,
---- Anyway thats node even a big issue, you can still configure your browser to accept local file.
+ - Although this is just a bunch of HTML and javascript, I suggest running the code by configuring your local server,
+--- Anyway, that's not a big issue, you can still configure your browser to accept the local file.
 
-The code is actually simple to understand, simply open the project using your most favourite editor, (For us in this task i used atom -:)-:)-:)..... :) please don't mind us!! )
+The code is simple to understand, open the project using your most favorite editor, (For us in this task we used atom -:)-:)-:)- :) please don't mind us!! )
 
-You may modifier any of the files but we recomend starting with the simple files like preproc.js, line-chart, ... before going bigger.. also don't mind us here, u can own the project :)
+You may modify any of the files, but we recommend starting with the simple files like preproc.js, line-chart,  before going bigger. Don't mind us here; you can own the project :)
 
-What else do you need? find us at Polytechnique Montreal, for special deal..
+What else do you need? Find us at Polytechnique Montreal for the special deal.
