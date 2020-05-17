@@ -1,21 +1,25 @@
 "use strict";
 
 /**
- * Fichier permettant de dessiner les graphiques "focus" et "contexte".
- */
-
+ * File used to draw the "focus" and "context" graphics.
+ **/
 
 /**
- * Crée une ligne SVG en utilisant les domaines X et Y spécifiés.
- * Cette fonction est utilisée par les graphiques "focus" et "contexte".
+ * Creates an SVG line using the specified X and Y domains.
+ * This function is used by the "focus" and "context" graphics.
  *
- * @param x               Le domaine X.
- * @param y               Le domaine Y.
- * @return d3.svg.line    Une ligne SVG.
+ * @param x               Domain X.
+ * @param y               The Y domain.
+ * @return d3.svg.line    An SVG line.
  *
  * @see https://bl.ocks.org/gordlea/27370d1eea8464b04538e6d8ced39e89      (voir line generator)
  */
 function createLine(x, y) {
+  /**
+  * Creating a line is as simple as calling the d3 line() function..!
+  * but we are interested in the curve so..
+  * lets use "curveBasisOpen" provided by d3
+  ***/
   return d3.line()
            .x(function(d) { return x(d.date)})
            .y(function(d) { return y(d.count)})
@@ -23,41 +27,43 @@ function createLine(x, y) {
 }
 
 /**
- * Crée une ligne qui sera ajouté à un graphique
- *
- * @param g         Le groupe SVG dans lequel le graphique doit être dessiné.
- * @param id        L'identifiant donné à la LineChart.
- * @param datum     Données liées à cette LineChart.
- * @param line      La fonction permettant de dessiner les lignes du graphique.
- * @param color     L'échelle de couleurs ayant une couleur associée à un nom de rue.
- * @param name      Nom à donner à la LineChart.
- */
+ * Create a line which will be added to a graph *
+ * @param g  The SVG group in which the graphic is to be drawn.
+ * @param id The identifier given to the LineChart.
+ * @param datum Data linked to this LineChart.
+ * @param line The function allowing to draw the lines of the graph.
+ * @param color The color scale with a color associated with a street name.
+ * @param name Name to give to the LineChart.
+ */
 function createLineChart(g, id, datum, line, color, name) {
+/**
+* here we need to set the detum,
+* assign the id , class and d atrributes,
+* then ready to draw, but we will assign static color black to mean column
+**/
   return g.append("path")
     .datum(datum)
-    //assign the id
-    .attr("id", id)
-    // give it a class atrribute line
-    .attr("class", "line")
-    // ready to draw
-    .attr("d", line)
-    // set black line if the line if for the mean column
+    .attr("id", id).attr("class", "line").attr("d", line)
     .style("stroke", name ===  "Moyenne" ? "#000000": color(name))
     .style("stroke-width", name ===  "Moyenne" ? 3 : 1);
 }
 
 /**
- * Crée le graphique focus.
+ * Creates the focus chart.
  *
- * @param g         Le groupe SVG dans lequel le graphique doit être dessiné.
- * @param sources   Les données à utiliser.
- * @param line      La fonction permettant de dessiner les lignes du graphique.
- * @param color     L'échelle de couleurs ayant une couleur associée à un nom de rue.
+ * @param g         The SVG group in which the graphic is to be drawn.
+ * @param sources   The data to use.
+ * @param line      The function for drawing the lines of the graph.
+ * @param color    The color scale having a color associated with a street name.
  */
 function createFocusLineChart(g, sources, line, color) {
+  /*
+  * Just a simple for loop
+  * call the createLineChart, append
+  * the attribute clipPath**
+  */
   for(var index in sources) {
-    var street = sources[index];
-    createLineChart(g, street.name, street.values, line, color, street.name)
+    createLineChart(g, sources[index].name, sources[index].values, line, color, sources[index].name)
     .attr("clip-path", "url(#clip)");
   }
 }
@@ -72,10 +78,12 @@ function createFocusLineChart(g, sources, line, color) {
  * @param color     L'échelle de couleurs ayant une couleur associée à un nom de rue.
  */
 function createContextLineChart(g, sources, line, color) {
-  // just loop through the dataset
+  /**
+  * just loop through the source
+  * and call the function to create the line..
+  * then we should be good to go..
+  */
   for(var index in sources) {
-    var street = sources[index];
-    /// call the function to create the line..
-    createLineChart(g, street.name + "Context", street.values, line, color, street.name)
+    createLineChart(g, sources[index].name + "Context", sources[index].values, line, color, sources[index].name)
   }
 }
