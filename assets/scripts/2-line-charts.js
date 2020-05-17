@@ -70,12 +70,12 @@ function createFocusLineChart(g, sources, line, color) {
 
 
 /**
- * Crée le graphique contexte.
+ * Creates the "context" line chart
  *
- * @param g         Le groupe SVG dans lequel le graphique doit être dessiné.
- * @param sources   Les données à utiliser.
- * @param line      La fonction permettant de dessiner les lignes du graphique.
- * @param color     L'échelle de couleurs ayant une couleur associée à un nom de rue.
+ * @param g         The SVG group where you draw the graphic. 
+ * @param sources   The data to use. 
+ * @param line      The function to draw the lines of the graphic. 
+ * @param color     Color scale with street names associated to colors
  */
 function createContextLineChart(g, sources, line, color) {
   /**
