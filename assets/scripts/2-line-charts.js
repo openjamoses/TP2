@@ -16,7 +16,6 @@
  * @see https://bl.ocks.org/gordlea/27370d1eea8464b04538e6d8ced39e89      (voir line generator)
  */
 function createLine(x, y) {
-  // TODO: Retourner une ligne SVG (voir "d3.line"). Pour l'option curve, utiliser un curveBasisOpen.
   return d3.line()
            .x(function(d) { return x(d.date)})
            .y(function(d) { return y(d.count)})
@@ -56,7 +55,6 @@ function createLineChart(g, id, datum, line, color, name) {
  * @param color     L'échelle de couleurs ayant une couleur associée à un nom de rue.
  */
 function createFocusLineChart(g, sources, line, color) {
-  // TODO: Dessiner le graphique focus dans le groupe "g".
   for(var index in sources) {
     var street = sources[index];
     createLineChart(g, street.name, street.values, line, color, street.name)

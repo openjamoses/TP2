@@ -12,7 +12,6 @@
  * @param data    Données provenant du fichier CSV.
  */
 function domainColor(color, data) {
-  // TODO: Définir le domaine de la variable "color" en associant un nom de rue à une couleur.
   // reader the header and exclude the date column..
   var header = Object.keys(data[0]).filter(header => header != "Date"); // On prend comme noms de lieux toutes les colonnes sauf "Date"
   color.domain(header);
@@ -97,10 +96,7 @@ function domainX(xFocus, xContext, data) {
  * @param sources     Données triées par nom de rue et par date (voir fonction "createSources").
  */
 function domainY(yFocus, yContext, sources) {
-  // TODO: Préciser les domaines pour les variables "yFocus" et "yContext" pour l'axe Y.
-
   var maxVal = d3.max(sources.map(source => d3.max(source.values.map(value => value.count))))
-
   yFocus.domain([0, maxVal])
   yContext.domain([0, maxVal])
 }
